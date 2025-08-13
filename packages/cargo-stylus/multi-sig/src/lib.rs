@@ -78,13 +78,13 @@ pub enum MultiSigError {
 /// Declare that `MultiSig` is a contract with the following external methods.
 #[public]
 impl MultiSig {
-    pub fn num_confirmations_required(&self) -> Result<U256, MultiSigError> {
+    pub fn num_confirmations_required_by_yash(&self) -> Result<U256, MultiSigError> {
         Ok(self.num_confirmations_required.get())
     }
 
     // The `deposit` method is payable, so it can receive funds.
     #[payable]
-    pub fn deposit(&mut self) {
+    pub fn deposit_by_yash(&mut self) {
         let sender = msg::sender();
         let amount = msg::value();
         evm::log(
@@ -96,7 +96,7 @@ impl MultiSig {
     }
 
     // The `submit_transaction` method submits a new transaction to the contract.
-    pub fn submit_transaction(&mut self, to: Address, value: U256, data: Bytes) -> Result<(), MultiSigError> {
+    pub fn submit_transaction_by_yash(&mut self, to: Address, value: U256, data: Bytes) -> Result<(), MultiSigError> {
         // The sender must be an owner.
         if !self.is_owner.get(msg::sender()) {
             return Err(MultiSigError::NotOwner(NotOwner{}));
